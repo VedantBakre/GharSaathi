@@ -8,3 +8,18 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 )
+
+// Register PWA Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const swUrl = `${import.meta.env.BASE_URL}sw.js`;
+    navigator.serviceWorker
+      .register(swUrl)
+      .then((reg) => {
+        console.log('GharSaathi PWA Service Worker active with scope:', reg.scope);
+      })
+      .catch((err) => {
+        console.log('PWA Service Worker registration failed:', err);
+      });
+  });
+}

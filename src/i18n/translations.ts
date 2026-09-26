@@ -10,6 +10,7 @@ export const translations: Record<Language, any> = {
       safety: 'Safety',
       manage: 'Manage',
       resources: 'Resources',
+      installApp: 'Install App',
     },
     settings: {
       resetData: 'Reset All Data',
@@ -137,6 +138,7 @@ export const translations: Record<Language, any> = {
       safety: 'सुरक्षा',
       manage: 'प्रबंधन',
       resources: 'संसाधन',
+      installApp: 'ऐप इंस्टॉल करें',
     },
     settings: {
       resetData: 'सभी डेटा रीसेट करें',
@@ -264,6 +266,7 @@ export const translations: Record<Language, any> = {
       safety: 'सुरक्षा',
       manage: 'व्यवस्थापन',
       resources: 'संसाधने',
+      installApp: 'ॲप इन्स्टॉल करा',
     },
     settings: {
       resetData: 'सर्व डेटा रीसेट करा',

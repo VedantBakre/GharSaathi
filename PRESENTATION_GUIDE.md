@@ -109,7 +109,7 @@ Clean tabbed architecture separating distinct domestic workflows:
 
 ---
 
-## 5. Ready-to-Use Presentation Deck Structure (Slide by Slide)
+## 5. Ready-to-Use Presentation Deck Structure (Slide by Slide, Only for understanding, go for Better Output)
 
 This section is formatted for direct ingestion by slide generation tools or presentation creation:
 

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Home, BookOpen, Shield, Settings, Link as LinkIcon, Menu, X, Sun, Moon, AlertTriangle, AArrowUp, AArrowDown, Type } from 'lucide-react';
+import { Home, BookOpen, Shield, Settings, Link as LinkIcon, Menu, X, Sun, Moon, AlertTriangle, AArrowUp, AArrowDown, Type, Download } from 'lucide-react';
 import type { Language } from '../i18n/translations';
 import { clearAllStorage, getStorage, setStorage } from '../utils/storage';
 
@@ -16,9 +16,31 @@ const FONT_SIZES = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstallable, setIsInstallable] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage, t } = useLanguage();
   const settingsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleBeforeInstall = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setIsInstallable(true);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setIsInstallable(false);
+    }
+    setDeferredPrompt(null);
+  };
 
   const [fontSizeIdx, setFontSizeIdx] = useState<number>(() => {
     return getStorage<number>('gharsaathi-fontsize-idx', 1);
@@ -116,6 +138,17 @@ const Navbar = () => {
               <option value="mr">मराठी</option>
             </select>
 
+            {isInstallable && (
+              <button
+                onClick={handleInstallClick}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all animate-pulse"
+                title={t('nav.installApp')}
+              >
+                <Download size={14} />
+                <span>{t('nav.installApp')}</span>
+              </button>
+            )}
+
             <div className="relative" ref={settingsRef}>
               <button 
                 onClick={() => setShowSettings(!showSettings)}
@@ -196,6 +229,18 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden border-t border-(--border-color) bg-(--card-bg)">
           <div className="px-2 pt-2 pb-3 space-y-1">
+            {isInstallable && (
+              <button
+                onClick={() => {
+                  handleInstallClick();
+                  setIsOpen(false);
+                }}
+                className="w-full mb-2 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md transition-all"
+              >
+                <Download size={18} />
+                <span>{t('nav.installApp')}</span>
+              </button>
+            )}
             {navLinks.map((link) => (
               <NavLink
                 key={link.to}
